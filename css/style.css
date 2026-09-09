@@ -125,12 +125,12 @@ button.primary:disabled { opacity: 0.6; cursor: default; }
 .kv span { color: var(--muted); }
 .kv b { font-weight: 600; display: flex; align-items: center; gap: 6px; text-align: right; }
 
-.voices { display: flex; flex-direction: column; gap: 10px; margin-bottom: 6px; }
-.voice { background: var(--panel-2); border-radius: 10px; padding: 8px 10px; }
-.voice.active { outline: 1px solid var(--accent); }
-.voiceHead { display: flex; justify-content: space-between; font-size: 13px; }
-.voiceHead .note { font-weight: 700; font-size: 16px; color: var(--accent-2); font-variant-numeric: tabular-nums; }
-.voiceDetail { display: flex; justify-content: space-between; color: var(--muted); font-size: 12px; margin-top: 4px; }
+.hands { display: flex; flex-direction: column; gap: 10px; margin-bottom: 6px; }
+.hand { background: var(--panel-2); border-radius: 10px; padding: 8px 10px; }
+.hand.active { outline: 1px solid var(--accent); }
+.handHead { display: flex; justify-content: space-between; font-size: 13px; }
+.handHead .note { font-weight: 700; font-size: 16px; color: var(--accent-2); font-variant-numeric: tabular-nums; }
+.handDetail { display: flex; justify-content: space-between; color: var(--muted); font-size: 12px; margin-top: 4px; }
 
 .meter { height: 8px; background: #2a2f3f; border-radius: 4px; overflow: hidden; margin-top: 6px; }
 .meter .fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent-2), var(--accent)); transition: width 80ms linear; }

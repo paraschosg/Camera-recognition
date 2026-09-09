@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Gesture Singer</title>
+  <title>Camera Sense</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -11,32 +11,14 @@
     <div class="brand">
       <span class="logo">🎤</span>
       <div>
-        <h1>Gesture Singer</h1>
-        <p>Move your hands to sing. The camera also reads your mood, the room light and what is going on in the scene.</p>
+        <h1>Camera Sense</h1>
+        <p>The camera recognises your hand gestures, reads your mood, measures the room light and describes what is going on in the scene.</p>
       </div>
     </div>
     <div class="controls">
-      <label>Voice
-        <select id="voiceType">
-          <option value="soprano">Soprano</option>
-          <option value="alto" selected>Alto</option>
-          <option value="tenor">Tenor</option>
-          <option value="bass">Bass</option>
-        </select>
-      </label>
-      <label>Scale
-        <select id="scale">
-          <option value="auto" selected>Auto (follows your mood)</option>
-          <option value="pentatonic">Pentatonic</option>
-          <option value="major">Major</option>
-          <option value="minor">Minor</option>
-          <option value="blues">Blues</option>
-          <option value="chromatic">Chromatic</option>
-        </select>
-      </label>
       <label class="check"><input type="checkbox" id="mirror" checked /> Mirror</label>
       <label class="check"><input type="checkbox" id="showLandmarks" checked /> Overlay</label>
-      <button id="startBtn" class="primary">Start camera &amp; voice</button>
+      <button id="startBtn" class="primary">Start camera</button>
     </div>
   </header>
 
@@ -45,30 +27,29 @@
       <div class="videoWrap mirrored" id="videoWrap">
         <video id="video" playsinline muted></video>
         <canvas id="overlay"></canvas>
-        <div class="status" id="status">Press <b>Start</b> to allow camera and audio.</div>
+        <div class="status" id="status">Press <b>Start</b> to allow the camera.</div>
       </div>
       <div class="hint">
-        <b>How to sing:</b> raise a hand to go higher, lower it to go deeper. Open your hand for loud, close it for silence.
-        Slide left/right to change the vowel (oo · oh · ah · eh · ee). Pinch thumb and index for vibrato. Use both hands for a duet.
+        <b>Try it:</b> show an open palm, a fist, a pinch, a pointing finger, a peace sign or a thumbs up. Smile, frown or look surprised. Dim the lights.
       </div>
     </section>
 
     <aside class="panel">
       <section class="card">
-        <h2>🎶 Singing</h2>
-        <div class="voices" id="voices">
-          <div class="voice" data-voice="0">
-            <div class="voiceHead"><span class="voiceName">Voice 1</span><span class="note">—</span></div>
+        <h2>✋ Hands</h2>
+        <div class="hands" id="handsList">
+          <div class="hand" data-hand="0">
+            <div class="handHead"><span class="handName">Hand 1</span><span class="note">—</span></div>
             <div class="meter"><div class="fill"></div></div>
-            <div class="voiceDetail"><span class="vowel">vowel —</span><span class="gesture">no hand</span></div>
+            <div class="handDetail"><span class="fingers">—</span><span class="gesture">no hand</span></div>
           </div>
-          <div class="voice" data-voice="1">
-            <div class="voiceHead"><span class="voiceName">Voice 2</span><span class="note">—</span></div>
+          <div class="hand" data-hand="1">
+            <div class="handHead"><span class="handName">Hand 2</span><span class="note">—</span></div>
             <div class="meter"><div class="fill"></div></div>
-            <div class="voiceDetail"><span class="vowel">vowel —</span><span class="gesture">no hand</span></div>
+            <div class="handDetail"><span class="fingers">—</span><span class="gesture">no hand</span></div>
           </div>
         </div>
-        <div class="kv"><span>Scale in use</span><b id="scaleInUse">—</b></div>
+        <div class="kv"><span>Movement</span><b id="handMotion">—</b></div>
       </section>
 
       <section class="card">

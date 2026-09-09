@@ -33,7 +33,7 @@ const state = {
 const bridge = new BridgeConnection();
 const controller = new Controller(bridge);
 
-const EMOTION_EMOJI = { happy: "😊 Happy", surprised: "😮 Surprised", sad: "😢 Sad", angry: "😠 Angry", neutral: "😐 Neutral" };
+const EMOTION_LABEL = { happy: "Happy", surprised: "Surprised", sad: "Sad", angry: "Angry", neutral: "Neutral" };
 const HAND_COLORS = ["#33d6a6", "#7c5cff"];
 
 function setStatus(text, isError = false) {
@@ -383,14 +383,14 @@ function updateUI(handInfo, faceInfo, frameInfo, hands) {
     el.querySelector(".fingers").textContent = info
       ? `${info.fingerCount} finger${info.fingerCount === 1 ? "" : "s"} up · ${Math.round(info.openness * 100)}% open · height ${Math.round(info.height * 100)}%`
       : "—";
-    el.querySelector(".gesture").textContent = info ? `${info.handedness} hand` : "no hand";
+    el.querySelector(".gesture").textContent = info ? `· ${info.handedness.toLowerCase()} hand` : "· no hand";
   });
   $("handMotion").textContent = handInfo.movement;
 
   // Emotion
   if (faceInfo.faces && faceInfo.emotion) {
     const { emotion, confidence, scores } = faceInfo.emotion;
-    $("emotionMain").textContent = `${EMOTION_EMOJI[emotion]} · ${Math.round(confidence * 100)}%`;
+    $("emotionMain").textContent = `${EMOTION_LABEL[emotion]} · ${Math.round(confidence * 100)}%`;
     document.querySelectorAll("#emotionBars .bar").forEach((bar) => {
       const k = bar.dataset.emotion;
       bar.querySelector(".fill").style.width = `${Math.round(scores[k] * 100)}%`;

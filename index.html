@@ -9,11 +9,8 @@
 <body>
   <header class="topbar">
     <div class="brand">
-      <span class="logo">🎤</span>
-      <div>
-        <h1>Camera Sense</h1>
-        <p>The camera recognises your hand gestures, reads your mood, measures the room light and describes what is going on in the scene.</p>
-      </div>
+      <h1>Camera Sense</h1>
+      <p>Hand gestures, mood, room light and scene information from your camera. Optional hands-free computer control.</p>
     </div>
     <div class="controls">
       <label class="check"><input type="checkbox" id="mirror" checked /> Mirror</label>
@@ -30,13 +27,13 @@
         <div class="status" id="status">Press <b>Start</b> to allow the camera.</div>
       </div>
       <div class="hint">
-        <b>Try it:</b> show an open palm, a fist, a pinch, a pointing finger, a peace sign or a thumbs up. Smile, frown or look surprised. Dim the lights.
+        <b>Try it:</b> show an open palm, a fist, a pinch, a peace sign or a thumbs up. Smile, frown or look surprised. Dim the lights.
       </div>
     </section>
 
     <aside class="panel">
-      <section class="card control" id="controlCard">
-        <h2>🖱️ Computer control</h2>
+      <section class="card control card-control" id="controlCard">
+        <h2>Computer control</h2>
         <div class="kv"><span>Bridge</span><b id="bridgeStatus" class="off">not connected</b></div>
         <div class="row">
           <label>Mode
@@ -51,7 +48,7 @@
           </label>
         </div>
         <div class="row">
-          <label class="check"><input type="checkbox" id="dwellClick" /> Dwell click (hold still 1 s)</label>
+          <label class="check"><input type="checkbox" id="dwellClick" /> Dwell click (1 s still)</label>
           <button id="recenter" class="small">Re-centre head</button>
         </div>
         <div class="screenPreview" id="screenPreview">
@@ -77,25 +74,25 @@
         </details>
       </section>
 
-      <section class="card">
-        <h2>✋ Hands</h2>
+      <section class="card card-hands">
+        <h2>Hands</h2>
         <div class="hands" id="handsList">
           <div class="hand" data-hand="0">
-            <div class="handHead"><span class="handName">Hand 1</span><span class="note">—</span></div>
+            <div class="handHead"><span class="handName">Hand 1 <span class="gesture">no hand</span></span><span class="note">—</span></div>
             <div class="meter"><div class="fill"></div></div>
-            <div class="handDetail"><span class="fingers">—</span><span class="gesture">no hand</span></div>
+            <div class="handDetail"><span class="fingers">—</span></div>
           </div>
           <div class="hand" data-hand="1">
-            <div class="handHead"><span class="handName">Hand 2</span><span class="note">—</span></div>
+            <div class="handHead"><span class="handName">Hand 2 <span class="gesture">no hand</span></span><span class="note">—</span></div>
             <div class="meter"><div class="fill"></div></div>
-            <div class="handDetail"><span class="fingers">—</span><span class="gesture">no hand</span></div>
+            <div class="handDetail"><span class="fingers">—</span></div>
           </div>
         </div>
         <div class="kv"><span>Movement</span><b id="handMotion">—</b></div>
       </section>
 
-      <section class="card">
-        <h2>🙂 Emotion</h2>
+      <section class="card card-emotion">
+        <h2>Emotion</h2>
         <div class="bigValue" id="emotionMain">No face</div>
         <div class="bars" id="emotionBars">
           <div class="bar" data-emotion="happy"><span>Happy</span><div class="track"><div class="fill"></div></div><em>0%</em></div>
@@ -106,8 +103,8 @@
         </div>
       </section>
 
-      <section class="card">
-        <h2>💡 Room</h2>
+      <section class="card card-room">
+        <h2>Room</h2>
         <div class="kv"><span>Light level</span><b id="lightLevel">—</b></div>
         <div class="meter light"><div class="fill" id="lightFill"></div></div>
         <div class="kv"><span>Ambient sensor</span><b id="lux">not available</b></div>
@@ -116,8 +113,8 @@
         <div class="kv"><span>Motion</span><b id="motion">—</b></div>
       </section>
 
-      <section class="card">
-        <h2>🔍 Scene</h2>
+      <section class="card card-scene">
+        <h2>Scene</h2>
         <div class="kv"><span>Faces</span><b id="faces">0</b></div>
         <div class="kv"><span>Hands</span><b id="hands">0</b></div>
         <div class="kv"><span>Head tilt</span><b id="headTilt">—</b></div>

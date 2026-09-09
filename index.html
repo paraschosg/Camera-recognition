@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gesture Singer</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🎤</span>
+      <div>
+        <h1>Gesture Singer</h1>
+        <p>Move your hands to sing. The camera also reads your mood, the room light and what is going on in the scene.</p>
+      </div>
+    </div>
+    <div class="controls">
+      <label>Voice
+        <select id="voiceType">
+          <option value="soprano">Soprano</option>
+          <option value="alto" selected>Alto</option>
+          <option value="tenor">Tenor</option>
+          <option value="bass">Bass</option>
+        </select>
+      </label>
+      <label>Scale
+        <select id="scale">
+          <option value="auto" selected>Auto (follows your mood)</option>
+          <option value="pentatonic">Pentatonic</option>
+          <option value="major">Major</option>
+          <option value="minor">Minor</option>
+          <option value="blues">Blues</option>
+          <option value="chromatic">Chromatic</option>
+        </select>
+      </label>
+      <label class="check"><input type="checkbox" id="mirror" checked /> Mirror</label>
+      <label class="check"><input type="checkbox" id="showLandmarks" checked /> Overlay</label>
+      <button id="startBtn" class="primary">Start camera &amp; voice</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="stage">
+      <div class="videoWrap mirrored" id="videoWrap">
+        <video id="video" playsinline muted></video>
+        <canvas id="overlay"></canvas>
+        <div class="status" id="status">Press <b>Start</b> to allow camera and audio.</div>
+      </div>
+      <div class="hint">
+        <b>How to sing:</b> raise a hand to go higher, lower it to go deeper. Open your hand for loud, close it for silence.
+        Slide left/right to change the vowel (oo · oh · ah · eh · ee). Pinch thumb and index for vibrato. Use both hands for a duet.
+      </div>
+    </section>
+
+    <aside class="panel">
+      <section class="card">
+        <h2>🎶 Singing</h2>
+        <div class="voices" id="voices">
+          <div class="voice" data-voice="0">
+            <div class="voiceHead"><span class="voiceName">Voice 1</span><span class="note">—</span></div>
+            <div class="meter"><div class="fill"></div></div>
+            <div class="voiceDetail"><span class="vowel">vowel —</span><span class="gesture">no hand</span></div>
+          </div>
+          <div class="voice" data-voice="1">
+            <div class="voiceHead"><span class="voiceName">Voice 2</span><span class="note">—</span></div>
+            <div class="meter"><div class="fill"></div></div>
+            <div class="voiceDetail"><span class="vowel">vowel —</span><span class="gesture">no hand</span></div>
+          </div>
+        </div>
+        <div class="kv"><span>Scale in use</span><b id="scaleInUse">—</b></div>
+      </section>
+
+      <section class="card">
+        <h2>🙂 Emotion</h2>
+        <div class="bigValue" id="emotionMain">No face</div>
+        <div class="bars" id="emotionBars">
+          <div class="bar" data-emotion="happy"><span>Happy</span><div class="track"><div class="fill"></div></div><em>0%</em></div>
+          <div class="bar" data-emotion="surprised"><span>Surprised</span><div class="track"><div class="fill"></div></div><em>0%</em></div>
+          <div class="bar" data-emotion="sad"><span>Sad</span><div class="track"><div class="fill"></div></div><em>0%</em></div>
+          <div class="bar" data-emotion="angry"><span>Angry</span><div class="track"><div class="fill"></div></div><em>0%</em></div>
+          <div class="bar" data-emotion="neutral"><span>Neutral</span><div class="track"><div class="fill"></div></div><em>0%</em></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>💡 Room</h2>
+        <div class="kv"><span>Light level</span><b id="lightLevel">—</b></div>
+        <div class="meter light"><div class="fill" id="lightFill"></div></div>
+        <div class="kv"><span>Ambient sensor</span><b id="lux">not available</b></div>
+        <div class="kv"><span>Colour temperature</span><b id="colorTemp">—</b></div>
+        <div class="kv"><span>Dominant colour</span><b><span class="swatch" id="swatch"></span><span id="dominantColor">—</span></b></div>
+        <div class="kv"><span>Motion</span><b id="motion">—</b></div>
+      </section>
+
+      <section class="card">
+        <h2>🔍 Scene</h2>
+        <div class="kv"><span>Faces</span><b id="faces">0</b></div>
+        <div class="kv"><span>Hands</span><b id="hands">0</b></div>
+        <div class="kv"><span>Head tilt</span><b id="headTilt">—</b></div>
+        <div class="kv"><span>Distance to camera</span><b id="distance">—</b></div>
+        <div class="kv"><span>Mouth</span><b id="mouth">—</b></div>
+        <div class="kv"><span>Eyes</span><b id="eyes">—</b></div>
+        <div class="kv"><span>Camera</span><b id="camInfo">—</b></div>
+        <div class="kv"><span>Frame rate</span><b id="fps">—</b></div>
+      </section>
+    </aside>
+  </main>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

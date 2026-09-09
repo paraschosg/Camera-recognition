@@ -1,0 +1,12 @@
+{
+  "name": "gesture-singer",
+  "version": "1.0.0",
+  "description": "Browser app that sings from hand gestures and reads emotion, room light and scene info from the camera.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "npx --yes serve -l 8080 .",
+    "check": "node --check js/app.js && node --check js/vision.js && node --check js/voice.js && node --check js/analysis.js"
+  },
+  "license": "MIT"
+}

@@ -35,6 +35,48 @@
     </section>
 
     <aside class="panel">
+      <section class="card control" id="controlCard">
+        <h2>🖱️ Computer control</h2>
+        <div class="kv"><span>Bridge</span><b id="bridgeStatus" class="off">not connected</b></div>
+        <div class="row">
+          <label>Mode
+            <select id="controlMode">
+              <option value="off" selected>Off</option>
+              <option value="hand">Hand pointer</option>
+              <option value="head">Head pointer</option>
+            </select>
+          </label>
+          <label>Sensitivity <span id="sensitivityValue">1.0</span>
+            <input type="range" id="sensitivity" min="0.5" max="2" step="0.1" value="1" />
+          </label>
+        </div>
+        <div class="row">
+          <label class="check"><input type="checkbox" id="dwellClick" /> Dwell click (hold still 1 s)</label>
+          <button id="recenter" class="small">Re-centre head</button>
+        </div>
+        <div class="screenPreview" id="screenPreview">
+          <div class="cursorDot" id="cursorDot"></div>
+          <div class="ring" id="dwellRing"></div>
+          <div class="previewLabel" id="controlState">control off</div>
+        </div>
+        <div class="kv"><span>Last action</span><b id="lastAction">—</b></div>
+        <details>
+          <summary>Gesture bindings</summary>
+          <table class="bindings" id="bindings"></table>
+          <p class="help">Actions: <code id="actionHelp"></code>. Hold a gesture for 0.6 s to fire it.</p>
+        </details>
+        <details>
+          <summary>How to set up the bridge</summary>
+          <ol class="help">
+            <li>Install Python 3, then in the project folder run <code>pip install -r bridge/requirements.txt</code>.</li>
+            <li>Run <code>python3 bridge/bridge.py</code> and keep that window open.</li>
+            <li>Choose a mode above. The status turns green when connected.</li>
+          </ol>
+          <p class="help"><b>Hand pointer:</b> index finger moves the cursor, pinch thumb + index to click or drag, thumb + middle finger right-clicks, peace sign + move up/down scrolls, fist rests the cursor, hold an open palm to pause / resume.<br />
+          <b>Head pointer:</b> move your head to move the cursor, open your mouth to click, raise your eyebrows to right-click, tilt your head to scroll.</p>
+        </details>
+      </section>
+
       <section class="card">
         <h2>✋ Hands</h2>
         <div class="hands" id="handsList">

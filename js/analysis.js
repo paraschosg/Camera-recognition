@@ -41,6 +41,9 @@ export function handFeatures(lm) {
   const pinchDist = dist(lm[4], lm[8]) / palmSize;
   const othersOut = [up.middle, up.ring, up.pinky].filter(Boolean).length >= 2;
   const pinch = othersOut ? clamp01((0.55 - pinchDist) / 0.35) : 0; // 1 = fully pinched
+  // Thumb + middle finger pinch (used as a right click); index must stay clear of the thumb.
+  const pinchMiddleDist = dist(lm[4], lm[12]) / palmSize;
+  const pinchMiddle = pinchDist > 0.6 && (up.ring || up.pinky) ? clamp01((0.55 - pinchMiddleDist) / 0.35) : 0;
 
   let gesture;
   if (pinch > 0.75) gesture = "pinch";
@@ -52,7 +55,7 @@ export function handFeatures(lm) {
   else if (up.thumb && !up.index && !up.middle && !up.ring && !up.pinky) gesture = "thumbs up";
   else gesture = `${fingerCount} finger${fingerCount === 1 ? "" : "s"}`;
 
-  return { palm, palmSize, openness, pinch, fingerCount, up, gesture };
+  return { palm, palmSize, openness, pinch, pinchMiddle, fingerCount, up, gesture, indexTip: lm[8] };
 }
 
 // ---------- Emotion ----------
@@ -96,6 +99,7 @@ export function emotionFromBlendshapes(categories) {
   return {
     scores,
     jawOpen,
+    browInnerUp,
     blink: avg(m, "eyeBlinkLeft", "eyeBlinkRight"),
   };
 }

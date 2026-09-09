@@ -150,3 +150,45 @@ button.primary:disabled { opacity: 0.6; cursor: default; }
 .bar[data-emotion="neutral"] .fill { background: #9aa1b3; }
 
 .swatch { width: 14px; height: 14px; border-radius: 4px; display: inline-block; border: 1px solid #ffffff33; background: #444; }
+
+/* Computer control */
+.control .row { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; margin: 6px 0; }
+.control label { display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: var(--muted); flex: 1; }
+.control label.check { flex-direction: row; align-items: center; gap: 6px; color: var(--text); font-size: 13px; }
+.control input[type="range"] { width: 100%; }
+button.small {
+  background: var(--panel-2); color: var(--text); border: 1px solid #333849; border-radius: 8px;
+  padding: 6px 10px; font-size: 12px; cursor: pointer;
+}
+#bridgeStatus.on { color: var(--accent-2); }
+#bridgeStatus.off { color: var(--warn); }
+.screenPreview {
+  position: relative; aspect-ratio: 16 / 9; background: #0b0d13; border: 1px solid #2a2f3f;
+  border-radius: 8px; margin: 8px 0; overflow: hidden;
+}
+.cursorDot {
+  position: absolute; width: 12px; height: 12px; border-radius: 50%; background: var(--accent-2);
+  transform: translate(-50%, -50%); left: 50%; top: 50%; box-shadow: 0 0 10px var(--accent-2); display: none;
+}
+.cursorDot.down { background: var(--danger); box-shadow: 0 0 10px var(--danger); }
+.ring {
+  position: absolute; width: 30px; height: 30px; border-radius: 50%; border: 3px solid var(--warn);
+  transform: translate(-50%, -50%); left: 50%; top: 50%; display: none;
+  clip-path: polygon(50% 50%, 50% 0, 50% 0, 50% 0, 50% 0);
+}
+.previewLabel {
+  position: absolute; left: 8px; bottom: 6px; font-size: 11px; color: var(--muted);
+}
+.previewLabel.paused { color: var(--warn); }
+.previewLabel.active { color: var(--accent-2); }
+.bindings { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 6px; }
+.bindings td { padding: 3px 4px; }
+.bindings td:first-child { color: var(--muted); width: 40%; }
+.bindings input {
+  width: 100%; background: var(--panel-2); color: var(--text); border: 1px solid #333849;
+  border-radius: 6px; padding: 4px 6px; font-size: 12px; font-family: ui-monospace, monospace;
+}
+details summary { cursor: pointer; font-size: 13px; color: var(--muted); margin-top: 6px; }
+.help { font-size: 12px; color: var(--muted); margin: 6px 0; padding-left: 18px; }
+p.help { padding-left: 0; }
+.help code { background: var(--panel-2); padding: 1px 5px; border-radius: 4px; font-size: 11px; }

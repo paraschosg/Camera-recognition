@@ -7,6 +7,7 @@ import {
   FrameAnalyzer,
   describeColor,
 } from "./analysis.js";
+import { Controller, BridgeConnection, DEFAULT_BINDINGS, ACTION_HELP } from "./control.js";
 
 const $ = (id) => document.getElementById(id);
 const video = $("video");
@@ -28,6 +29,9 @@ const state = {
   lastUiUpdate: 0,
   handTracks: [], // previous palm positions per hand slot, for movement speed
 };
+
+const bridge = new BridgeConnection();
+const controller = new Controller(bridge);
 
 const EMOTION_EMOJI = { happy: "😊 Happy", surprised: "😮 Surprised", sad: "😢 Sad", angry: "😠 Angry", neutral: "😐 Neutral" };
 const HAND_COLORS = ["#33d6a6", "#7c5cff"];
@@ -98,6 +102,65 @@ async function start() {
 startBtn.addEventListener("click", start);
 $("mirror").addEventListener("change", (e) => $("videoWrap").classList.toggle("mirrored", e.target.checked));
 
+// ---------- Computer control UI ----------
+
+function loadBindings() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("cameraSense.bindings") || "null");
+    if (Array.isArray(saved) && saved.length) return saved;
+  } catch {}
+  return DEFAULT_BINDINGS.map((b) => ({ ...b }));
+}
+
+function renderBindings() {
+  const table = $("bindings");
+  table.innerHTML = "";
+  for (const b of controller.bindings) {
+    const row = document.createElement("tr");
+    const name = document.createElement("td");
+    name.textContent = b.gesture;
+    const cell = document.createElement("td");
+    const input = document.createElement("input");
+    input.value = b.action;
+    input.placeholder = "leave empty to disable";
+    input.addEventListener("change", () => {
+      b.action = input.value.trim();
+      try {
+        localStorage.setItem("cameraSense.bindings", JSON.stringify(controller.bindings));
+      } catch {}
+    });
+    cell.appendChild(input);
+    row.append(name, cell);
+    table.appendChild(row);
+  }
+}
+
+controller.bindings = loadBindings();
+renderBindings();
+$("actionHelp").textContent = ACTION_HELP;
+
+bridge.onChange = () => {
+  const el = $("bridgeStatus");
+  el.textContent = bridge.connected
+    ? `connected${bridge.screen ? ` · screen ${bridge.screen.width}×${bridge.screen.height}` : ""}`
+    : "not connected · run bridge/bridge.py";
+  el.className = bridge.connected ? "on" : "off";
+};
+
+$("controlMode").addEventListener("change", (e) => {
+  controller.setMode(e.target.value);
+  controller.enabled = true;
+  if (e.target.value === "off") bridge.disconnect();
+  else bridge.connect();
+  bridge.onChange();
+});
+$("sensitivity").addEventListener("input", (e) => {
+  controller.sensitivity = Number(e.target.value);
+  $("sensitivityValue").textContent = controller.sensitivity.toFixed(1);
+});
+$("dwellClick").addEventListener("change", (e) => (controller.dwellClick = e.target.checked));
+$("recenter").addEventListener("click", () => controller.recenterHead());
+
 // ---------- Main loop ----------
 
 function loop() {
@@ -119,6 +182,9 @@ function loop() {
 
     const handInfo = processHands(hands, now);
     const faceInfo = processFace(state.lastFaceResult);
+    // The pointer hand is the user's right hand when two are visible (smallest raw x).
+    controller.updateHand(handInfo.hands.find(Boolean) ?? null, now);
+    controller.updateHead(faceInfo.faces ? faceInfo : null, now);
     draw(hands, state.lastFaceResult, handInfo);
 
     if (now - state.lastUiUpdate > 100) {
@@ -182,15 +248,17 @@ function processHands(result, now) {
 function processFace(result) {
   if (!result?.faceLandmarks?.length) return { faces: 0 };
   const shapes = result.faceBlendshapes?.[0]?.categories;
-  let emo = null, jawOpen = 0, blink = 0;
+  let emo = null, jawOpen = 0, blink = 0, browInnerUp = 0;
   if (shapes) {
     const e = emotionFromBlendshapes(shapes);
     emo = state.emotion.update(e.scores);
     jawOpen = e.jawOpen;
     blink = e.blink;
+    browInnerUp = e.browInnerUp;
   }
   const geo = faceGeometry(result.faceLandmarks[0], video.videoWidth, video.videoHeight);
-  return { faces: result.faceLandmarks.length, emotion: emo, jawOpen, blink, ...geo };
+  const nose = result.faceLandmarks[0][1];
+  return { faces: result.faceLandmarks.length, emotion: emo, jawOpen, blink, browInnerUp, nose, ...geo };
 }
 
 // ---------- Drawing ----------
@@ -199,6 +267,16 @@ function draw(hands, face, handInfo) {
   octx.clearRect(0, 0, overlay.width, overlay.height);
   if (!$("showLandmarks").checked) return;
   const W = overlay.width, H = overlay.height;
+
+  // Active box: the part of the frame that maps onto the whole screen in hand mode.
+  if (controller.mode === "hand") {
+    const b = controller.activeBox();
+    octx.strokeStyle = controller.enabled ? "rgba(51,214,166,0.6)" : "rgba(255,179,71,0.6)";
+    octx.setLineDash([10, 8]);
+    octx.lineWidth = 2;
+    octx.strokeRect(b.x0 * W, b.y0 * H, b.w * W, b.h * H);
+    octx.setLineDash([]);
+  }
 
   if (face?.faceLandmarks) {
     octx.fillStyle = "rgba(255,255,255,0.35)";
@@ -254,7 +332,48 @@ function drawLabel(text, x, y, color, level) {
 
 // ---------- UI ----------
 
+function updateControlUI() {
+  const dot = $("cursorDot");
+  const label = $("controlState");
+  const ring = $("dwellRing");
+  if (controller.mode === "off") {
+    dot.style.display = "none";
+    ring.style.display = "none";
+    label.textContent = "control off";
+    label.className = "previewLabel";
+  } else {
+    const c = controller.cursor;
+    if (c) {
+      dot.style.display = "block";
+      dot.style.left = `${c.x * 100}%`;
+      dot.style.top = `${c.y * 100}%`;
+      dot.classList.toggle("down", controller.leftDown);
+      const dwell = controller.dwellProgress();
+      ring.style.display = dwell > 0 ? "block" : "none";
+      ring.style.left = dot.style.left;
+      ring.style.top = dot.style.top;
+      const size = 40 - dwell * 26;
+      ring.style.width = ring.style.height = `${size}px`;
+    } else {
+      dot.style.display = "none";
+      ring.style.display = "none";
+    }
+    const hold = controller.holdProgress();
+    label.textContent = !controller.enabled
+      ? "paused · hold open palm to resume"
+      : hold > 0
+        ? `hold ${controller.holdGesture}… ${Math.round(hold * 100)}%`
+        : controller.mode === "hand"
+          ? "hand pointer active"
+          : "head pointer active";
+    label.className = `previewLabel ${controller.enabled ? "active" : "paused"}`;
+  }
+  const age = performance.now() - controller.lastEventAt;
+  $("lastAction").textContent = controller.lastEvent && age < 4000 ? controller.lastEvent : "—";
+}
+
 function updateUI(handInfo, faceInfo, frameInfo, hands) {
+  updateControlUI();
   // Hands
   document.querySelectorAll("#handsList .hand").forEach((el, slot) => {
     const info = handInfo.hands[slot];

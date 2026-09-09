@@ -9,6 +9,7 @@ Run:  python3 bridge.py            (after: pip install -r requirements.txt)
 """
 import asyncio
 import json
+import os
 import sys
 
 try:
@@ -16,7 +17,12 @@ try:
     from pynput.keyboard import Controller as KeyboardController, Key
     from pynput.mouse import Button, Controller as MouseController
 except ImportError as exc:  # pragma: no cover
-    sys.exit(f"Missing dependency ({exc}). Run: pip install -r requirements.txt")
+    _req = os.path.join(os.path.dirname(os.path.abspath(__file__)), "requirements.txt")
+    sys.exit(
+        f"Missing dependency ({exc}).\n"
+        f"Install it with the same Python that runs this script:\n"
+        f'  "{sys.executable}" -m pip install -r "{_req}"'
+    )
 
 HOST = "127.0.0.1"
 PORT = 8765
